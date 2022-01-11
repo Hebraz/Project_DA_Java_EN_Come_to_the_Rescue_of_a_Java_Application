@@ -1,41 +1,57 @@
 package com.hemebiotech.analytics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.util.List;
+import java.util.Locale;
+import java.util.TreeMap;
 
+/**
+ * The AnalyticsCounter class computes the occurrences of symptoms.
+ *
+ * Symptoms occurrences are added by using
+ * {@link #updateSymptomOccurrences(ISymptomReader, boolean) updateSymptomOccurrences} method.
+ *
+ */
 public class AnalyticsCounter {
-	private static int headacheCount = 0;
-	private static int rashCount = 0;
-	private static int pupilCount = 0;
-	
-	public static void main(String args[]) throws Exception {
-		// first get input
-		BufferedReader reader = new BufferedReader (new FileReader("symptoms.txt"));
-		String line = reader.readLine();
 
-		int headCount = 0;	// counts headaches
-		while (line != null) {
-			System.out.println("symptom from file: " + line);
-			if (line.equals("headache")) {
-				headCount++;
-				System.out.println("number of headaches: " + headCount);
-			}
-			else if (line.equals("rush")) {
-				rashCount++;
-			}
-			else if (line.contains("pupils")) {
-				pupilCount++;
-			}
+	/**
+	 * symptomOccurrences holds symptoms and their associated occurrences as a key/value map.
+	 *  Where keys are symptoms (lowercase String) and values are occurrences (Integer).
+	 *  TreeMap type guarantees that Symptoms will be sorted in natural String order.
+	 */
+	private TreeMap<String, Integer> symptomOccurrences = new TreeMap<>();
 
-			line = reader.readLine();	// get another symptom
+	/**
+	 * The updateSymptomOccurrences method computes the occurrences of symptoms from a list of
+	 * symptoms given by an {@link com.hemebiotech.analytics.ISymptomReader ISymptomReader}
+	 *
+	 * Several list of symptoms from different sources (different ISymptomReader) can be aggregated by AnalyticsCounter.
+	 * To do that, call updateSymptomOccurrences for each source, with the parameter "append" set to true.
+	 *
+	 * @param reader list of symptoms provider
+	 * @param append True: aggregate new occurrences to already registered ones. False: flush already registered occurrences
+	 *
+	 */
+	public void updateSymptomOccurrences(ISymptomReader reader, boolean append) {
+
+		if(!append) {
+			/* flush already registered symptom occurrences when "append" is set to false */
+			symptomOccurrences.clear();
 		}
-		
-		// next generate output
-		FileWriter writer = new FileWriter ("result.out");
-		writer.write("headache: " + headacheCount + "\n");
-		writer.write("rash: " + rashCount + "\n");
-		writer.write("dialated pupils: " + pupilCount + "\n");
-		writer.close();
+
+		if(reader != null) {
+
+			List<String> symptoms = reader.GetSymptoms();
+
+			if(symptoms != null){
+				for(String symptom : symptoms) {
+					/*symptom keys shall be lowercase*/
+					symptom = symptom.toLowerCase(Locale.ROOT).trim();
+
+					/*Add symptom to symptomOccurrences map with occurrence set to 1 if symptom is not already present
+					  Otherwise increment the occurrence by 1 */
+					symptomOccurrences.merge(symptom, 1, Integer::sum);
+				}
+			}
+		}
 	}
 }
