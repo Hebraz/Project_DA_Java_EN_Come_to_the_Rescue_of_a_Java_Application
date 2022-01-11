@@ -1,5 +1,6 @@
 package com.hemebiotech.analytics;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeMap;
@@ -52,6 +53,25 @@ public class AnalyticsCounter {
 					symptomOccurrences.merge(symptom, 1, Integer::sum);
 				}
 			}
+		}
+	}
+
+	/**
+	 * The print method writes the symptoms/occurrences dictionary to an output through an
+	 *  {@link com.hemebiotech.analytics.ISymptomOccurrenceWriter ISymptomOccurrenceWriter}
+	 *
+	 * Several list of symptoms from different sources (different ISymptomReader) can be aggregated by AnalyticsCounter.
+	 * To do that, call updateSymptomOccurrences for each source, with the parameter "append" set to true.
+	 *
+	 * @param symptomOccurrenceWriter Anything that will write list of symptoms and their associated occurrence to an output
+	 */
+	public void print(ISymptomOccurrenceWriter symptomOccurrenceWriter) {
+		if(symptomOccurrenceWriter != null)
+		{
+			/*to guarantee encapsulation, do not give access to symptomOccurrences from the outside,
+				pass a copy of it
+			 */
+			symptomOccurrenceWriter.write(new TreeMap<String,Integer>(symptomOccurrences));
 		}
 	}
 }
