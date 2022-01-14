@@ -29,15 +29,15 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	 */
 	@Override
 	public List<String> GetSymptoms() {
-		List<String> result = new ArrayList<String>();
+		List<String> symptoms = new ArrayList<String>();
 
 		if (filepath != null) {
 			try {
-				result = Files.readAllLines(Paths.get(filepath), Charset.defaultCharset());
+				symptoms = Files.readAllLines(Paths.get(filepath), Charset.defaultCharset());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return result;
+		return symptoms;
 	}
 }

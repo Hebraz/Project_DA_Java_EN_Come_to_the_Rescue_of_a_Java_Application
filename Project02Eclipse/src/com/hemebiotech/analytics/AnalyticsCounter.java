@@ -45,12 +45,14 @@ public class AnalyticsCounter {
 
 			if(symptoms != null){
 				for(String symptom : symptoms) {
-					/*symptom keys shall be lowercase*/
-					symptom = symptom.toLowerCase(Locale.ROOT).trim();
+					if(symptom != null)	{
+						/*symptom keys shall be lowercase*/
+						symptom = symptom.toLowerCase(Locale.ROOT).trim();
 
-					/*Add symptom to symptomOccurrences map with occurrence set to 1 if symptom is not already present
-					  Otherwise increment the occurrence by 1 */
-					symptomOccurrences.merge(symptom, 1, Integer::sum);
+						/*Add symptom to symptomOccurrences map with occurrence set to 1 if symptom is not already present
+						  Otherwise increment the occurrence by 1 */
+						symptomOccurrences.merge(symptom, 1, Integer::sum);
+					}
 				}
 			}
 		}
