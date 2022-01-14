@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ReadSymptomDataFromFile class read symptoms list from a text file
@@ -28,10 +29,10 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	 * @return a list of symptom strings that may contain many duplications. If no data in text file, returns an empty list.
 	 */
 	@Override
-	public List<String> GetSymptoms() {
+	public List<String> getSymptoms() {
 		List<String> symptoms = new ArrayList<String>();
 
-		if (filepath != null) {
+		if (Objects.nonNull(filepath)) {
 			try {
 				symptoms = Files.readAllLines(Paths.get(filepath), Charset.defaultCharset());
 			} catch (Exception e) {

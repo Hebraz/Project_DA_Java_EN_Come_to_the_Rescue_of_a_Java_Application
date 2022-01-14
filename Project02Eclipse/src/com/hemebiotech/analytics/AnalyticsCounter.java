@@ -1,9 +1,6 @@
 package com.hemebiotech.analytics;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * The AnalyticsCounter class computes the occurrences of symptoms.
@@ -19,7 +16,11 @@ public class AnalyticsCounter {
 	 *  Where keys are symptoms (lowercase String) and values are occurrences (Integer).
 	 *  TreeMap type guarantees that Symptoms will be sorted in natural String order.
 	 */
-	private TreeMap<String, Integer> symptomOccurrences = new TreeMap<>();
+	private final SortedMap<String, Integer> symptomOccurrences;
+
+	public AnalyticsCounter(){
+		symptomOccurrences = new TreeMap<String, Integer>();
+	}
 
 	/**
 	 * The updateSymptomOccurrences method computes the occurrences of symptoms from a list of
@@ -39,15 +40,15 @@ public class AnalyticsCounter {
 			symptomOccurrences.clear();
 		}
 
-		if(reader != null) {
+		if(Objects.nonNull(reader)) {
 
-			List<String> symptoms = reader.GetSymptoms();
+			List<String> symptoms = reader.getSymptoms();
 
-			if(symptoms != null){
+			if(Objects.nonNull(symptoms)){
 				for(String symptom : symptoms) {
-					if(symptom != null)	{
+					if(Objects.nonNull(symptom))	{
 						/*symptom keys shall be lowercase*/
-						symptom = symptom.toLowerCase(Locale.ROOT).trim();
+						symptom = symptom.toLowerCase().trim();
 
 						/*Add symptom to symptomOccurrences map with occurrence set to 1 if symptom is not already present
 						  Otherwise increment the occurrence by 1 */
@@ -67,13 +68,10 @@ public class AnalyticsCounter {
 	 *
 	 * @param symptomOccurrenceWriter Anything that will write list of symptoms and their associated occurrence to an output
 	 */
-	public void print(ISymptomOccurrenceWriter symptomOccurrenceWriter) {
-		if(symptomOccurrenceWriter != null)
+	public void display(ISymptomOccurrenceWriter symptomOccurrenceWriter) {
+		if(Objects.nonNull(symptomOccurrenceWriter))
 		{
-			/*to guarantee encapsulation, do not give access to symptomOccurrences from the outside,
-				pass a copy of it
-			 */
-			symptomOccurrenceWriter.write(new TreeMap<String,Integer>(symptomOccurrences));
+			symptomOccurrenceWriter.write(symptomOccurrences);
 		}
 	}
 }

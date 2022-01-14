@@ -21,7 +21,7 @@ public class Analytics {
         counter.updateSymptomOccurrences(new ReadSymptomDataFromFile(symptomInputFilePath), false);
 
         /*It is possible to extract occurrences counters to different output formats : simple text file, console...*/
-        counter.print(new WriteSymptomOccurrenceToFile(resultOutputFilePath));
-        counter.print(new WriteSymptomOccurrenceToConsole());
+        counter.display(new WriteSymptomOccurrenceToFile(resultOutputFilePath));
+        counter.display(new WriteSymptomOccurrenceToConsole());
     }
 }
