@@ -20,6 +20,8 @@ public class Analytics {
         /*read symptoms from input file and compute occurrences for each symptom*/
         counter.updateSymptomOccurrences(new ReadSymptomDataFromFile(symptomInputFilePath), false);
 
+        /*It is possible to extract occurrences counters to different output formats : simple text file, console...*/
         counter.print(new WriteSymptomOccurrenceToFile(resultOutputFilePath));
+        counter.print(new WriteSymptomOccurrenceToConsole());
     }
 }
